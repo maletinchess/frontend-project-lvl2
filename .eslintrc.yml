@@ -1,4 +1,7 @@
- extends:
+extends:
    - 'airbnb-base'
- env:
+env:
    node: true
+rules:
+  no-console: 0
+  import/extensions: 0

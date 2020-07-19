@@ -1,10 +1,11 @@
 import fs from 'fs';
 import _ from 'lodash';
 import readlineSync from 'readline-sync';
+import path from 'path';
 
 const getJsonDiff = () => {
-  const path1 = readlineSync.question('Enter the first filepath or filename ');
-  const path2 = readlineSync.question('Enter the second filepath or filename ');
+  const path1 = path.resolve(readlineSync.question('Enter the first filepath or filename '));
+  const path2 = path.resolve(readlineSync.question('Enter the second filepath or filename '));
   const json1 = fs.readFileSync(path1, 'utf8');
   const obj1 = JSON.parse(json1);
   const keys1 = Object.keys(obj1);

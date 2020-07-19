@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import program from 'commander';
-import getJsonDiff from '../src/index.js';
+import getJsonDiff from '../index.js';
 
 program
   .version('0.0.1')

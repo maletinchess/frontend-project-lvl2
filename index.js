@@ -5,7 +5,6 @@ import readlineSync from 'readline-sync';
 const getJsonDiff = () => {
   const path1 = readlineSync.question('Enter the first filepath or filename ');
   const path2 = readlineSync.question('Enter the second filepath or filename ');
-
   const json1 = fs.readFileSync(path1, 'utf8');
   const obj1 = JSON.parse(json1);
   const keys1 = Object.keys(obj1);
@@ -19,10 +18,10 @@ const getJsonDiff = () => {
     const isChanged = (obj1[key] !== obj2[key] && _.has(obj2, key));
     const isRemoved = (!_.has(obj2, key));
     if (isNotChanged) {
-      acc.push(key);
+      acc.push(`    ${key}: ${obj1[key]}`);
     }
     if (isChanged) {
-      acc.push(`+ ${key}: ${obj2[key]}\n- ${key}: ${obj1[key]}`);
+      acc.push(`+ ${key}: ${obj2[key]}\n  - ${key}: ${obj1[key]}`);
     }
     if (isRemoved) {
       acc.push(`- ${key}: ${obj1[key]}`);
@@ -39,7 +38,7 @@ const getJsonDiff = () => {
     return acc;
   };
   const diff2 = keys2.reduce(cb2, []);
-  const resultDiff = diff1.concat(diff2).join('\n');
+  const resultDiff = `{\n${diff1.concat(diff2).join('\n  ')}\n}`;
   console.log(resultDiff);
 };
 

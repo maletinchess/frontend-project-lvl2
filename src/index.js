@@ -42,5 +42,5 @@ const getJsonDiff = () => {
   const resultDiff = diff1.concat(diff2).join('\n');
   console.log(resultDiff);
 };
-getJsonDiff();
+
 export default getJsonDiff;

@@ -1,0 +1,36 @@
+{
+  "name": "frontend-project-lvl2",
+  "version": "1.0.0",
+  "description": "hexlet project js level 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maletinchess/frontend-project-lvl2.git"
+  },
+  "keywords": [
+    "cli",
+    "json",
+    "yaml",
+    "ini",
+    "parser",
+    "difference"
+  ],
+  "author": "Pavel Maletin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maletinchess/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/maletinchess/frontend-project-lvl2#readme",
+  "dependencies": {
+    "commander": "^5.1.0",
+    "lodash": "^4.17.19"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0"
+  }
+}

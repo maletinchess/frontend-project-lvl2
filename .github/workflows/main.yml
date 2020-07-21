@@ -33,6 +33,12 @@ jobs:
     - name: test
       run: |
           make test
-    - name: Run eslint
-      run: |
-          make lint
+    - name: Test & publish code coverage
+        # Publish code coverage on Code Climate
+        # https://github.com/paambaati/codeclimate-action
+      uses: paambaati/codeclimate-action@v2.6.0
+      env:
+          MALETIN_CHESS_PROJECT_2: ${{ secrets.MALETIN_CHESS_PROJECT_2 }}
+      with:
+          coverageCommand: make test-coverage
+          debug: true

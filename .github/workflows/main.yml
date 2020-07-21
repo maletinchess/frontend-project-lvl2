@@ -38,7 +38,7 @@ jobs:
         # https://github.com/paambaati/codeclimate-action
       uses: paambaati/codeclimate-action@v2.6.0
       env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{ secrets.MALETIN_CHESS_PROJECT_2 }}
       with:
           coverageCommand: make test-coverage
           debug: true

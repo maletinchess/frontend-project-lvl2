@@ -29,8 +29,4 @@ const getJsonDiff = (path1, path2) => {
   return `{\n${output.join('\n')}\n}\n`;
 };
 
-const a = '/home/pavel/projects/train1/json_files/file1.json';
-const b = '/home/pavel/projects/train1/json_files/file2.json';
-console.log(getJsonDiff(a, b));
-
 export default getJsonDiff;

@@ -30,6 +30,7 @@
   "homepage": "https://github.com/maletinchess/frontend-project-lvl2#readme",
   "dependencies": {
     "commander": "^5.1.0",
+    "ini": "^1.3.5",
     "lodash": "^4.17.19",
     "readline-sync": "^1.4.10",
     "yaml": "^1.10.0"

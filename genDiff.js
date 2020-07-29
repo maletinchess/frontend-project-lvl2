@@ -9,21 +9,21 @@ const genDiff = (obj1, obj2) => {
     const isRemoved = (_.has(obj1, key) && !_.has(obj2, key));
     const isAdded = (!_.has(obj1, key) && _.has(obj2, key));
     if (isNotChanged) {
-      acc.push(`    ${key}: ${obj1[key]}`);
+      acc.push([key, obj1[key]]);
     }
     if (isChanged) {
-      acc.push(`  + ${key}: ${obj2[key]}\n  - ${key}: ${obj1[key]}`);
+      acc.push([key, obj2[key]], [key, obj1[key]]);
     }
     if (isRemoved) {
-      acc.push(`  - ${key}: ${obj1[key]}`);
+      acc.push([key, obj1[key]]);
     }
     if (isAdded) {
-      acc.push(`  + ${key}: ${obj2[key]}`);
+      acc.push([key, obj2[key]]);
     }
     return acc;
   };
   const output = keys.reduce(cb, []);
-  return `{\n${output.join('\n')}\n}\n`;
+  return output;
 };
 
 export default genDiff;

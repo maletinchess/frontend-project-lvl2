@@ -11,13 +11,17 @@ const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-const firstJson = parse(getFixturePath('file1.json'));
-const secondJson = parse(getFixturePath('file2.json'));
-const expectedFile = getFixturePath('expected_file.json');
+const firstJson = parse(getFixturePath('recursive1.json'));
+const secondJson = parse(getFixturePath('recursive22.json'));
+const expectedFile = getFixturePath('expected_recursive.json');
 
 const firstYaml = parse(getFixturePath('file1.yml'));
 const secondYaml = parse(getFixturePath('file2.yml'));
-const expectedYaml = getFixturePath('expeted_file.yml');
+const expectedYaml = getFixturePath('expected_file.yml');
+
+const firstIni = parse(getFixturePath('file1.ini'));
+const secondIni = parse(getFixturePath('file2.ini'));
+const expectedIni = getFixturePath('expected_file.ini');
 
 test('getJsonDiff', () => {
   expect(genDiff(firstJson, secondJson)).toEqual(fs.readFileSync(expectedFile, 'utf-8'));
@@ -25,4 +29,8 @@ test('getJsonDiff', () => {
 
 test('yaml', () => {
   expect(genDiff(firstYaml, secondYaml)).toEqual(fs.readFileSync(expectedYaml, 'utf-8'));
+});
+
+test('ini', () => {
+  expect(genDiff(firstIni, secondIni)).toEqual(fs.readFileSync(expectedIni, 'utf-8'));
 });

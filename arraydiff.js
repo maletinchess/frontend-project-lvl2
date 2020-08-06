@@ -17,6 +17,46 @@ const getKeys = (flat1, flat2) => {
 const isValueObject = (obj, key) => (typeof (obj[key]) === 'object' && !Array.isArray(obj[key]));
 const isValuesObject = (obj1, obj2, key) => (isValueObject(obj1, key) && isValueObject(obj2, key));
 
+const isFlatPair = (pair) => {
+  const [key, value] = pair;
+  return pair.length === 2
+  && Array.isArray(pair)
+  && typeof (key) === 'string'
+  && typeof (value) !== 'object';
+};
+
+const normalized = (array) => {
+  const check = array.filter((item) => isFlatPair(item));
+  return check.length === array.length;
+};
+
+const format = (pairs) => pairs.map((pair) => {
+  const [key, value] = pair;
+  return [`  ${key}`, `${value}`];
+});
+
+const normalizeObject = (object) => {
+  const arr = Object.entries(object);
+  if (normalized(arr)) {
+    return format(arr);
+  }
+  const arrDeep = arr.map((item) => (isFlatPair(item) ? [`  ${item[0]}`, `${item[1]}`] : [`  ${item[0]}`, normalizeObject(item[1])]));
+  return arrDeep;
+};
+
+const test = {
+  group3: {
+    fee: 100500,
+    deep: {
+      id: { number: 45 },
+    },
+  },
+};
+
+const testNormalized = normalizeObject(test);
+
+const test2 = Object.entries(test);
+
 const recursive = (tree1, tree2) => {
   const keys = getKeys(tree1, tree2);
 
@@ -30,17 +70,17 @@ const recursive = (tree1, tree2) => {
     const isRemoved = (_.has(tree1, key) && !_.has(tree2, key));
     const isAdd = (!_.has(tree1, key) && _.has(tree2, key));
     if (isEqual) {
-      acc.push([`  ${key}`, typeof (tree1[key]) === 'object' ? Object.entries(tree1[key]).flat() : `${tree1[key]}`]);
+      acc.push([`  ${key}`, typeof (tree1[key]) !== 'object' ? `${tree1[key]}` : normalizeObject(tree1[key])]);
     }
     if (isRemoved) {
-      acc.push([`- ${key}`, typeof (tree1[key]) === 'object' ? Object.entries(tree1[key]).flat() : `${tree1[key]}`]);
+      acc.push([`- ${key}`, typeof (tree1[key]) !== 'object' ? `${tree1[key]}` : normalizeObject(tree1[key])]);
     }
     if (isAdd) {
-      acc.push([`+ ${key}`, typeof (tree2[key]) === 'object' ? Object.entries(tree2[key]).flat() : `${tree2[key]}`]);
+      acc.push([`+ ${key}`, typeof (tree2[key]) !== 'object' ? `${tree2[key]}` : normalizeObject(tree2[key])]);
     }
     if (isChanged) {
-      acc.push([`- ${key}`, typeof (tree1[key]) === 'object' ? Object.entries(tree1[key]).flat() : `${tree1[key]}`]);
-      acc.push([`+ ${key}`, typeof (tree2[key]) === 'object' ? Object.entries(tree2[key]).flat() : `${tree2[key]}`]);
+      acc.push([`- ${key}`, typeof (tree1[key]) !== 'object' ? `${tree1[key]}` : normalizeObject(tree1[key])]);
+      acc.push([`+ ${key}`, typeof (tree2[key]) !== 'object' ? `${tree2[key]}` : normalizeObject(tree2[key])]);
     }
     return acc;
   };
@@ -56,54 +96,10 @@ const recursive = (tree1, tree2) => {
     .map((key) => [key, tree1[key], tree2[key]])
     .map((item) => {
       const [key, value1, value2] = item;
-      return [key, recursive(value1, value2)];
+      return [`  ${key}`, recursive(value1, value2)];
     });
   return child.concat(noChild);
 };
 const diff = recursive(rec1, rec2);
 
-const valueIsOneString = ['key1', ['x', 'y']];
-const valueIsArr = ['set', [[' key', 'value'], ['+ ops', 'vops'], ['  alpha', 'beta']]];
-const valueIsDeep = ['xxx', ['key1', ['x', 'y']]];
-
-const isString = (value) => typeof (value) === 'string';
-const isFlatKeyValuePair = (value) => {
-  const stringElements = value.filter((item) => isString(item));
-  return stringElements.length === value.length;
-};
-const isArrayOfKeyValuePairs = (value) => {
-  const arrayElements = value.filter((item) => Array.isArray(item) && isFlatKeyValuePair(item));
-  return arrayElements.length === value.length;
-};
-
-const readyToFormat = ([, value]) => (isString(value)
- || isFlatKeyValuePair(value)
- || isArrayOfKeyValuePairs(value));
-
-const makeFormat = (pair) => {
-  const [key, value] = pair;
-  const [innerKey, innerValue] = value;
-  if (readyToFormat(pair) && isFlatKeyValuePair(pair)) {
-    return `{\n   ${key}: {\n     ${innerKey}: ${innerValue}\n   }\n}`;
-  }
-  if (readyToFormat(pair) && isArrayOfKeyValuePairs(value)) {
-    const prepared = value.map((item) => `${item[0]}: ${item[1]}`);
-    return `{\n   ${key}: {\n     ${prepared.join('\n    ')}\n   }\n}`;
-  }
-  return 'notReadyToFormat';
-};
-
-console.log(diff);
-console.log('\n\n');
-console.log(isString(valueIsOneString[0]));
-console.log(isFlatKeyValuePair(valueIsOneString[1]));
-console.log(isFlatKeyValuePair(valueIsArr[1]));
-console.log(isArrayOfKeyValuePairs(valueIsDeep[1]));
-console.log(isArrayOfKeyValuePairs(valueIsArr[1]));
-console.log('\n\n');
-console.log(readyToFormat(valueIsOneString));
-console.log(readyToFormat(valueIsArr));
-console.log(readyToFormat(valueIsDeep));
-console.log('\n\n');
-console.log(makeFormat(valueIsArr));
-console.log(makeFormat(diff[1]));
+export default recursive;

@@ -51,7 +51,7 @@ const recursive = (tree1, tree2) => {
   const children = keys.filter((key) => isValuesObject(tree1, tree2, key));
 
   const cb = (acc, key) => {
-    acc[key] = recursive(tree1[key], tree2[key]);
+    acc[`  ${key}`] = recursive(tree1[key], tree2[key]);
     return acc;
   };
   return children.reduce(cb, diff);
@@ -59,4 +59,18 @@ const recursive = (tree1, tree2) => {
 
 const diff = recursive(rec1, rec2);
 
-console.log(diff);
+const diffArr = Object.entries(diff);
+const diff1 = diffArr[2];
+
+console.log(diff1);
+
+const indent = '!!';
+const stringifyPair = (pair) => `{\n${indent}${pair[0]}: ${pair[1]}\n}`;
+const stringifyArray = (array) => `{\n${indent}${array.join(`\n${indent}`)}\n}`;
+const key = 'delta';
+const flatArr = ['alpha: qwerty', 'beta: asdf', 'gamma: lkjh'];
+
+console.log(stringifyArray(flatArr));
+const notFlat = stringifyPair([key, stringifyArray(flatArr)]);
+const anotherKey = 'sigma';
+console.log(stringifyPair([anotherKey, notFlat]));

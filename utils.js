@@ -54,7 +54,6 @@ const stringifyFormatable = (pair, counter) => {
   const modifiedValue = value.map((item) => `${item[0]}: ${item[1]}`).join(`\n${indentHigh}`);
   return stringifyPair([key, getFrame(modifiedValue)]);
 };
-console.log(stringifyFormatable(ex4, 1));
 
 const stringifyDeepKey = (pair) => {
   const iter = (node, counter) => {
@@ -73,10 +72,10 @@ const stringifyDeepKey = (pair) => {
   };
   return iter(pair, 3);
 };
-console.log(diff);
 
 const stringifyDeepArray = (array) => {
   const arrayModified = array.map((pair) => stringifyDeepKey(pair)).join(`\n${indentSymbol}`);
   return `{\n${indentSymbol}${arrayModified}\n}`;
 };
-console.log(stringifyDeepArray(diff));
+
+export default stringifyDeepArray;

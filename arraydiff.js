@@ -57,7 +57,7 @@ const testNormalized = normalizeObject(test);
 
 const test2 = Object.entries(test);
 
-const recursive = (tree1, tree2) => {
+const genDiffDeep = (tree1, tree2) => {
   const keys = getKeys(tree1, tree2);
 
   const getKeyValueView = (acc, key) => {
@@ -96,10 +96,9 @@ const recursive = (tree1, tree2) => {
     .map((key) => [key, tree1[key], tree2[key]])
     .map((item) => {
       const [key, value1, value2] = item;
-      return [`  ${key}`, recursive(value1, value2)];
+      return [`  ${key}`, genDiffDeep(value1, value2)];
     });
   return child.concat(noChild);
 };
-const diff = recursive(rec1, rec2);
 
-export default recursive;
+export default genDiffDeep;

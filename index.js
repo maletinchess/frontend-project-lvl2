@@ -1,6 +1,14 @@
 import parse from './parsers.js';
-import genDiff from './genDiff.js';
+import getDiff from './diff.js';
+import stringifyDeepArray from './formatter.js';
 
-const runDiff = (filepath1, filepath2) => console.log(genDiff(parse(filepath1), parse(filepath2)));
+const genDiff = (filepath1, filepath2, format) => {
+  if (format === 'stylish') {
+    console.log(stringifyDeepArray(getDiff(parse(filepath1), parse(filepath2))));
+  }
+  if (format === 'xxx') {
+    console.log('xxx!!');
+  }
+};
 
-export default runDiff;
+export default genDiff;

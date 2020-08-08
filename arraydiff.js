@@ -1,13 +1,4 @@
 import _ from 'lodash';
-import parse from './parsers.js';
-import genDiff from './genDiff.js';
-
-const rec1 = parse('/home/pavel/frontend-project-lvl2/__fixtures__/recursive1.json');
-const rec2 = parse('/home/pavel/frontend-project-lvl2/__fixtures__/recursive2.json');
-const flatJson1 = parse('/home/pavel/frontend-project-lvl2/__fixtures__/file1.json');
-const flatJson2 = parse('/home/pavel/frontend-project-lvl2/__fixtures__/file2.json');
-const partjs1 = parse('/home/pavel/frontend-project-lvl2/__fixtures__/partjson1.json');
-const partjs2 = parse('/home/pavel/frontend-project-lvl2/__fixtures__/partjson2.json');
 
 const getKeys = (flat1, flat2) => {
   const keys = [flat1, flat2];
@@ -43,19 +34,6 @@ const normalizeObject = (object) => {
   const arrDeep = arr.map((item) => (isFlatPair(item) ? [`  ${item[0]}`, `${item[1]}`] : [`  ${item[0]}`, normalizeObject(item[1])]));
   return arrDeep;
 };
-
-const test = {
-  group3: {
-    fee: 100500,
-    deep: {
-      id: { number: 45 },
-    },
-  },
-};
-
-const testNormalized = normalizeObject(test);
-
-const test2 = Object.entries(test);
 
 const genDiffDeep = (tree1, tree2) => {
   const keys = getKeys(tree1, tree2);

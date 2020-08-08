@@ -2,8 +2,8 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import parse from '../parsers.js';
-import genDiffDeep from '../arraydiff.js';
-import stringifyDeepArray from '../utils.js';
+import getDiff from '../diff.js';
+import stringifyDeepArray from '../formatter.js';
 
 /* eslint-disable no-underscore-dangle */
 const __filename = fileURLToPath(import.meta.url);
@@ -17,5 +17,5 @@ const secondJson = parse(getFixturePath('recursive2.json'));
 const expectedFile = getFixturePath('expected_recursive.json');
 
 test('getJsonDiffRecursive', () => {
-  expect(stringifyDeepArray(genDiffDeep(firstJson, secondJson))).toEqual(fs.readFileSync(expectedFile, 'utf-8'));
+  expect(stringifyDeepArray(getDiff(firstJson, secondJson))).toEqual(fs.readFileSync(expectedFile, 'utf-8'));
 });

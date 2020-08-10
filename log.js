@@ -33,6 +33,18 @@ const test = {
   },
 };
 
-const testdiff = stringifyDeepArray(diff);
+const indent = '  ';
 
-console.log(testdiff);
+const stringifyObject = (obj) => {
+  const transformed = Object.entries(obj);
+  return transformed.map((item) => {
+    if (typeof (item[1]) !== 'object') {
+      return `{\n${indent}${item[0]}: ${item[1]}\n}`;
+    }
+    return `{\n${indent.repeat(2)}${item[0]}: ${stringifyObject(item[1])}\n}`;
+  }).join('\n');
+};
+
+console.log(stringifyObject(test));
+
+const testdiff = stringifyDeepArray(diff);

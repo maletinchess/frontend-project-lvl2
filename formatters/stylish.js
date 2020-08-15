@@ -22,7 +22,7 @@ const normalizeObject = (object, indentNumber) => {
   return iter(object, indentNumber);
 };
 
-const makeStylish = (nodes, start) => {
+const makeStylish = (nodes, start = 0) => {
   const callback = (node) => {
     const {
       name, value, children, type, stage,

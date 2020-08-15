@@ -11,5 +11,3 @@ program
   .action((filepath1, filepath2) => genDiff(filepath1, filepath2, program.format));
 
 program.parse(process.argv);
-
-console.log(program.format);

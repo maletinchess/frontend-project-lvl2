@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { normalizeObject } from './utils.js';
 
 const getKeys = (flat1, flat2) => {
   const keys = [flat1, flat2];
@@ -9,7 +8,7 @@ const getKeys = (flat1, flat2) => {
 const isValueObject = (obj, key) => (typeof (obj[key]) === 'object' && !Array.isArray(obj[key]));
 const isValuesObject = (obj1, obj2, key) => (isValueObject(obj1, key) && isValueObject(obj2, key));
 
-export const analizeStage = (obj1, obj2, key) => {
+const analizeStage = (obj1, obj2, key) => {
   if (!_.has(obj1, key)) {
     return 'add';
   }
@@ -22,29 +21,52 @@ export const analizeStage = (obj1, obj2, key) => {
   return 'analize deep';
 };
 
-const getDiff = (tree1, tree2) => {
+const getdiff = (tree1, tree2) => {
   const keys = getKeys(tree1, tree2);
   const callback = (acc, key) => {
     if (analizeStage(tree1, tree2, key) === 'add') {
-      acc.push([`+ ${key}`, typeof (tree2[key]) === 'object' ? normalizeObject(tree2[key]) : `${tree2[key]}`]);
+      const diff = {};
+      diff.name = `${key}`;
+      diff.stage = 'add';
+      diff.value = tree2[key];
+      diff.type = 'plain';
+      acc.push(diff);
     }
     if (analizeStage(tree1, tree2, key) === 'removed') {
-      acc.push([`- ${key}`, typeof (tree1[key]) === 'object' ? normalizeObject(tree1[key]) : `${tree1[key]}`]);
+      const diff = {};
+      diff.name = `${key}`;
+      diff.stage = 'removed';
+      diff.value = tree1[key];
+      diff.type = 'plain';
+      acc.push(diff);
     }
     if (analizeStage(tree1, tree2, key) === 'unchanged') {
-      acc.push([`  ${key}`, typeof (tree1[key]) === 'object' ? normalizeObject(tree1[key]) : `${tree1[key]}`]);
+      const diff = {};
+      diff.name = `${key}`;
+      diff.stage = 'unchanged';
+      diff.value = tree1[key];
+      diff.type = 'plain';
+      acc.push(diff);
     }
     if (analizeStage(tree1, tree2, key) === 'changed') {
-      acc.push([`- ${key}`, typeof (tree1[key]) === 'object' ? normalizeObject(tree1[key]) : `${tree1[key]}`]);
-      acc.push([`+ ${key}`, typeof (tree2[key]) === 'object' ? normalizeObject(tree2[key]) : `${tree2[key]}`]);
+      const diff = {};
+      diff.name = `${key}`;
+      diff.stage = 'updated';
+      diff.value = { before: tree1[key], after: tree2[key] };
+      diff.type = 'plain';
+      acc.push(diff);
     }
     if (analizeStage(tree1, tree2, key) === 'analize deep') {
-      acc.push([`  ${key}`, getDiff(tree1[key], tree2[key])]);
+      const diff = {};
+      diff.name = `${key}`;
+      diff.stage = 'deep';
+      diff.children = getdiff(tree1[key], tree2[key]);
+      diff.type = 'node';
+      acc.push(diff);
     }
     return acc;
   };
-  const result = keys.reduce(callback, []);
-  return result;
+  return keys.reduce(callback, []);
 };
 
-export default getDiff;
+export default getdiff;

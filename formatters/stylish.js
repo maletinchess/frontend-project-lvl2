@@ -1,7 +1,7 @@
 const indent = '  ';
 const diffDefault = '  ';
 const statusMark = {
-  add: '+ ', removed: '- ', unchanged: '  ', 'updated from': '- ', 'updated to': '+ ', deep: '  ',
+  add: '+ ', removed: '- ', unchanged: '  ', before: '- ', after: '+ ', deep: '  ',
 };
 
 const normalizeObject = (object, indentNumber) => {
@@ -28,6 +28,9 @@ const makeStylish = (nodes, start) => {
       name, value, children, type, stage,
     } = node;
     if (type === 'plain') {
+      if (stage === 'updated') {
+        return Object.entries(value).map((item) => `${statusMark[item[0]]}${name}: ${normalizeObject(item[1], start + 2)}`).join(`\n${indent.repeat(start + 1)}`);
+      }
       return `${statusMark[stage]}${name}: ${normalizeObject(value, start + 2)}`;
     }
     return `${statusMark[stage]}${name}: ${makeStylish(children, start + 2)}`;

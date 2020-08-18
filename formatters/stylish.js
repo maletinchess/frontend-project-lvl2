@@ -22,21 +22,24 @@ const normalizeObject = (object, indentNumber) => {
   return iter(object, indentNumber);
 };
 
-const makeStylish = (nodes, start = 0) => {
-  const callback = (node) => {
-    const {
-      name, value, children, type, stage,
-    } = node;
-    if (type === 'plain') {
-      if (stage === 'updated') {
-        return Object.entries(value).map((item) => `${statusMark[item[0]]}${name}: ${normalizeObject(item[1], start + 2)}`).join(`\n${indent.repeat(start + 1)}`);
+const makeStylish = (diff) => {
+  const inner = (nodes, start) => {
+    const callback = (node) => {
+      const {
+        name, value, children, type, stage,
+      } = node;
+      if (type === 'plain') {
+        if (stage === 'updated') {
+          return Object.entries(value).map((item) => `${statusMark[item[0]]}${name}: ${normalizeObject(item[1], start + 2)}`).join(`\n${indent.repeat(start + 1)}`);
+        }
+        return `${statusMark[stage]}${name}: ${normalizeObject(value, start + 2)}`;
       }
-      return `${statusMark[stage]}${name}: ${normalizeObject(value, start + 2)}`;
-    }
-    return `${statusMark[stage]}${name}: ${makeStylish(children, start + 2)}`;
+      return `${statusMark[stage]}${name}: ${inner(children, start + 2)}`;
+    };
+    const nodesModified = nodes.map((node) => callback(node));
+    return `{\n${indent.repeat(start + 1)}${nodesModified.join(`\n${indent.repeat(start + 1)}`)}\n${indent.repeat(start)}}`;
   };
-  const nodesModified = nodes.map((node) => callback(node));
-  return `{\n${indent.repeat(start + 1)}${nodesModified.join(`\n${indent.repeat(start + 1)}`)}\n${indent.repeat(start)}}`;
+  return inner(diff, 0);
 };
 
 export default makeStylish;

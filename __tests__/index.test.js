@@ -13,30 +13,53 @@ const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-const firstJson = parse(getFixturePath('recursive1.json'));
-const secondJson = parse(getFixturePath('recursive2.json'));
-const expectedFile = getFixturePath('expected_recursive.json');
-const diff = getdiff(firstJson, secondJson);
-const startPointLowScopeIndent = 0;
-
-const plain = [
-  "Property 'common.follow' was added with value: false",
-  "Property 'common.setting2' was removed",
-  "Property 'common.setting3' was updated. From true to [complex value]",
-  "Property 'common.setting4' was added with value: 'blah blah'",
-  "Property 'common.setting5' was added with value: [complex value]",
-  "Property 'common.setting6.doge.wow' was updated. From 'too much' to 'so much'",
-  "Property 'common.setting6.ops' was added with value: 'vops'",
-  "Property 'group1.baz' was updated. From 'bas' to 'bars'",
-  "Property 'group1.nest' was updated. From [complex value] to 'str'",
-  "Property 'group2' was removed",
-  "Property 'group3' was added with value: [complex value]",
-];
+const firstJson = parse(getFixturePath('json_deep1.json'));
+const secondJson = parse(getFixturePath('json_deep2.json'));
+const diffJson = getdiff(firstJson, secondJson);
+const firstIni = parse(getFixturePath('ini_deep1.ini'));
+const secondIni = parse(getFixturePath('ini_deep2.ini'));
+const diffIni = getdiff(firstIni, secondIni);
+const firstYaml = parse(getFixturePath('yaml_deep1.yml'));
+const secondYaml = parse(getFixturePath('yaml_deep2.yml'));
+const diffYaml = getdiff(firstYaml, secondYaml);
+const expectedStylish = fs.readFileSync(getFixturePath('expected_diff_stylish'), 'utf-8');
+const expectedPlain = fs.readFileSync(getFixturePath('expected_diff_plain'), 'utf-8');
+const expectedJSON = fs.readFileSync(getFixturePath('expected_diff_json.json'), 'utf-8');
 
 test('getJsonDiffStylish', () => {
-  expect(`${makeStylish(diff, startPointLowScopeIndent)}\n`).toEqual(fs.readFileSync(expectedFile, 'utf-8'));
+  expect(`${makeStylish(diffJson)}\n`).toEqual(expectedStylish);
 });
 
 test('getJsonDiffPlain', () => {
-  expect(makePlain(diff)).toEqual(plain.join('\n'));
+  expect(`${makePlain(diffJson)}\n`).toEqual(expectedPlain);
 });
+
+test('getJsonDiffJSON', () => {
+  expect(`${JSON.stringify(diffJson)}\n`).toEqual(expectedJSON);
+});
+
+test('getIniDiffStylish', () => {
+  expect(`${makeStylish(diffIni)}\n`).toEqual(expectedStylish);
+});
+
+test('getIniDiffPlain', () => {
+  expect(`${makePlain(diffIni)}\n`).toEqual(expectedPlain);
+});
+
+test('getIniDiffJSON', () => {
+  expect(`${JSON.stringify(diffIni)}\n`).toEqual(expectedJSON);
+});
+
+test('getYamlDiffStylish', () => {
+  expect(`${makeStylish(diffYaml)}\n`).toEqual(expectedStylish);
+});
+
+test('getYamlDiffPlain', () => {
+  expect(`${makePlain(diffYaml)}\n`).toEqual(expectedPlain);
+});
+
+test('getYamlDiffJSON', () => {
+  expect(`${JSON.stringify(diffYaml)}\n`).toEqual(expectedJSON);
+});
+
+console.log(makeStylish(diffJson));

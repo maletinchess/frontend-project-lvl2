@@ -19,6 +19,9 @@ const expectedJSON = fs.readFileSync(getFixturePath('expected_diff_json.json'), 
 
 let diff;
 
+/* global beforeAll, test, expect */
+/* eslint no-undef: "error" */
+
 beforeAll(() => {
   const data1 = prepareData(getFixturePath('json_deep1.json'), 'utf-8');
   const data2 = prepareData(getFixturePath('json_deep2.json'), 'utf-8');

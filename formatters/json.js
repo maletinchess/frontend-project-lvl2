@@ -1,3 +1,3 @@
-const makeJson = (nodes) => JSON.stringify(nodes, null, 2);
+const makeJson = (nodes) => JSON.stringify(nodes);
 
 export default makeJson;

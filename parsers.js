@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import YAML from 'yaml';
 import ini from 'ini';
 import _ from 'lodash';
@@ -32,15 +30,15 @@ export const restore = (obj) => {
   return keys.reduce(cb, {});
 };
 
-const parse = (filepath) => {
-  const format = path.extname(filepath).slice(1);
+const parse = (data) => {
+  const [format, content] = data;
   switch (format) {
     case 'json':
-      return JSON.parse(fs.readFileSync(filepath, 'utf8'));
+      return JSON.parse(content);
     case 'yml':
-      return YAML.parse(fs.readFileSync(filepath, 'utf8'));
+      return YAML.parse(content);
     case 'ini':
-      return restore(ini.parse(fs.readFileSync(filepath, 'utf8')));
+      return restore(ini.parse(content));
     default:
       throw new Error(`unknown ${format}`);
   }

@@ -7,3 +7,11 @@
 gendiff JSON-files format stylish, format plain, format JSON
 
 <a href="https://asciinema.org/a/nAlG7SfzEB72nFcgtJ6kqVljz?speed=2&autoplay=1" target="_blank"><img src="https://asciinema.org/a/nAlG7SfzEB72nFcgtJ6kqVljz.svg" /></a>
+
+gendiff INI-files format stylish, format plain, format JSON
+
+<a href="https://asciinema.org/a/yr50kK9f7H9WIk5VE8oAOohsw?speed=2&autoplay=1" target="_blank"><img src="https://asciinema.org/a/yr50kK9f7H9WIk5VE8oAOohsw.svg" /></a>
+
+gendiff YAML-files format stylish, format plain, format JSON
+
+<a href="https://asciinema.org/a/wG611Od6bXiTcsge5eOQiXnl3?speed=2&autoplay=1" target="_blank"><img src="https://asciinema.org/a/wG611Od6bXiTcsge5eOQiXnl3.svg" /></a>

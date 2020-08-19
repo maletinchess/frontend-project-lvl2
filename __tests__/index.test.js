@@ -61,5 +61,3 @@ test('getYamlDiffPlain', () => {
 test('getYamlDiffJSON', () => {
   expect(`${JSON.stringify(diffYaml)}\n`).toEqual(expectedJSON);
 });
-
-console.log(makeStylish(diffJson));

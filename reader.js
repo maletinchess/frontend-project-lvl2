@@ -2,8 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
 import ini from 'ini';
-import getdiff from './diff.js';
-import defineFormat from './formatters/index.js';
 import { restore } from './parsers.js';
 
 const prepareData = (filepath) => {
@@ -26,14 +24,6 @@ const parse = (data) => {
   }
 };
 
-const genDiff = (filepath1, filepath2, format) => {
-  const data1 = prepareData(filepath1);
-  const data2 = prepareData(filepath2);
-  const node1 = parse(data1);
-  const node2 = parse(data2);
-  const diff = getdiff(node1, node2);
-  const makeFormat = defineFormat(format);
-  console.log(makeFormat(diff));
-};
-
-export default genDiff;
+const data1 = prepareData('/home/pavel/frontend-project-lvl2/__fixtures__/ini_deep2.ini');
+const transformedData = parse(data1);
+console.log(transformedData);

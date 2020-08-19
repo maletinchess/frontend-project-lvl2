@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import parse from './parsers.js';
 
 const getKeys = (flat1, flat2) => {
   const keys = [flat1, flat2];
@@ -69,9 +68,5 @@ const getdiff = (tree1, tree2) => {
   };
   return keys.reduce(callback, []);
 };
-
-const diffJson = getdiff(parse('/home/pavel/frontend-project-lvl2/__fixtures__/ini_deep1.ini'), parse('/home/pavel/frontend-project-lvl2/__fixtures__/ini_deep2.ini'));
-console.log(JSON.stringify(diffJson, null, 2));
-console.log(diffJson);
 
 export default getdiff;

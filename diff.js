@@ -1,10 +1,5 @@
 import _ from 'lodash';
 
-const getKeys = (flat1, flat2) => {
-  const keys = [flat1, flat2];
-  return _.uniq(keys.map((item) => Object.keys(item)).flat()).sort();
-};
-
 const isValueObject = (obj, key) => (typeof (obj[key]) === 'object' && !Array.isArray(obj[key]));
 const areValuesObject = (obj1, obj2, key) => (isValueObject(obj1, key) && isValueObject(obj2, key));
 
@@ -21,46 +16,46 @@ const analizeKeyModification = (obj1, obj2, key) => {
   return 'analize deep';
 };
 
-const getDiff = (tree1, tree2) => {
-  const keys = getKeys(tree1, tree2);
+const getDiff = (obj1, obj2) => {
+  const keys = _.union(_.keys(obj1), _.keys(obj2)).sort();
   const callback = (acc, key) => {
-    if (analizeKeyModification(tree1, tree2, key) === 'add') {
+    if (analizeKeyModification(obj1, obj2, key) === 'add') {
       const diff = {};
       diff.name = `${key}`;
       diff.stage = 'add';
-      diff.value = tree2[key];
+      diff.value = obj2[key];
       diff.type = 'plain';
       acc.push(diff);
     }
-    if (analizeKeyModification(tree1, tree2, key) === 'removed') {
+    if (analizeKeyModification(obj1, obj2, key) === 'removed') {
       const diff = {};
       diff.name = `${key}`;
       diff.stage = 'removed';
-      diff.value = tree1[key];
+      diff.value = obj1[key];
       diff.type = 'plain';
       acc.push(diff);
     }
-    if (analizeKeyModification(tree1, tree2, key) === 'unchanged') {
+    if (analizeKeyModification(obj1, obj2, key) === 'unchanged') {
       const diff = {};
       diff.name = `${key}`;
       diff.stage = 'unchanged';
-      diff.value = tree1[key];
+      diff.value = obj1[key];
       diff.type = 'plain';
       acc.push(diff);
     }
-    if (analizeKeyModification(tree1, tree2, key) === 'changed') {
+    if (analizeKeyModification(obj1, obj2, key) === 'changed') {
       const diff = {};
       diff.name = `${key}`;
       diff.stage = 'updated';
-      diff.value = { before: tree1[key], after: tree2[key] };
+      diff.value = { before: obj1[key], after: obj2[key] };
       diff.type = 'plain';
       acc.push(diff);
     }
-    if (analizeKeyModification(tree1, tree2, key) === 'analize deep') {
+    if (analizeKeyModification(obj1, obj2, key) === 'analize deep') {
       const diff = {};
       diff.name = `${key}`;
       diff.stage = 'deep';
-      diff.children = getDiff(tree1[key], tree2[key]);
+      diff.children = getDiff(obj1[key], obj2[key]);
       diff.type = 'node';
       acc.push(diff);
     }

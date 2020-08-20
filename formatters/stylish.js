@@ -1,10 +1,11 @@
 const indent = '  ';
-const diffDefault = '  ';
-const statusMark = {
+
+const signOfKeyModification = {
   add: '+ ', removed: '- ', unchanged: '  ', before: '- ', after: '+ ', deep: '  ',
 };
 
 const normalizeObject = (object, indentNumber) => {
+  const keyIndent = '  ';
   const iter = (item, counter) => {
     if (typeof (item) !== 'object') {
       return `${item}`;
@@ -13,9 +14,9 @@ const normalizeObject = (object, indentNumber) => {
     const modified = arrayView.map((pair) => {
       const [key, value] = pair;
       if (typeof (value) !== 'object') {
-        return `${indent.repeat(counter)}${diffDefault}${key}: ${value}`;
+        return `${indent.repeat(counter)}${keyIndent}${key}: ${value}`;
       }
-      return `${indent.repeat(counter)}${diffDefault}${key}: ${iter(value, counter + 2)}`;
+      return `${indent.repeat(counter)}${keyIndent}${key}: ${iter(value, counter + 2)}`;
     });
     return `{\n${indent}${modified.join(`\n${indent}`)}\n${indent.repeat(counter)}}`;
   };
@@ -30,11 +31,11 @@ const makeStylish = (diff) => {
       } = node;
       if (type === 'plain') {
         if (stage === 'updated') {
-          return Object.entries(value).map((item) => `${statusMark[item[0]]}${name}: ${normalizeObject(item[1], start + 2)}`).join(`\n${indent.repeat(start + 1)}`);
+          return Object.entries(value).map((item) => `${signOfKeyModification[item[0]]}${name}: ${normalizeObject(item[1], start + 2)}`).join(`\n${indent.repeat(start + 1)}`);
         }
-        return `${statusMark[stage]}${name}: ${normalizeObject(value, start + 2)}`;
+        return `${signOfKeyModification[stage]}${name}: ${normalizeObject(value, start + 2)}`;
       }
-      return `${statusMark[stage]}${name}: ${inner(children, start + 2)}`;
+      return `${signOfKeyModification[stage]}${name}: ${inner(children, start + 2)}`;
     };
     const nodesModified = nodes.map((node) => callback(node));
     return `{\n${indent.repeat(start + 1)}${nodesModified.join(`\n${indent.repeat(start + 1)}`)}\n${indent.repeat(start)}}`;

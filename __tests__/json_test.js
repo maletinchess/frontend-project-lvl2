@@ -2,7 +2,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import parse from '../parsers.js';
-import getdiff from '../diff.js';
+import getDiff from '../diff.js';
 import makeStylish from '../formatters/stylish.js';
 import makePlain from '../formatters/plain.js';
 import { prepareData } from '../index.js';
@@ -25,7 +25,7 @@ let diff;
 beforeAll(() => {
   const data1 = prepareData(getFixturePath('json_deep1.json'), 'utf-8');
   const data2 = prepareData(getFixturePath('json_deep2.json'), 'utf-8');
-  diff = getdiff(parse(data1), parse(data2));
+  diff = getDiff(parse(data1), parse(data2));
 });
 
 test('json stylish', () => {

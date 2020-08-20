@@ -2,7 +2,7 @@
   "name": "frontend-project-lvl2",
   "version": "1.0.0",
   "description": "hexlet project js level 2",
-  "main": "index.js",
+  "main": "diff.js",
   "type": "module",
   "bin": {
     "gendiff": "bin/gendiff.js"

@@ -3,13 +3,16 @@ import makePlain from './plain.js';
 import makeJson from './json.js';
 
 const defineFormat = (format) => {
-  if (format === 'plain') {
-    return makePlain;
+  switch (format) {
+    case 'plain':
+      return makePlain;
+    case 'json':
+      return makeJson;
+    case 'stylish':
+      return makeStylish;
+    default:
+      throw new Error(`unknown ${format}`);
   }
-  if (format === 'json') {
-    return makeJson;
-  }
-  return makeStylish;
 };
 
 export default defineFormat;

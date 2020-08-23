@@ -8,9 +8,6 @@ program
   .description('Compares two configuration files and shows a difference.')
   .arguments('<filepath1> <filepath2>')
   .option('-f, --format [type]', 'output format', 'stylish')
-  .action((filepath1, filepath2) => {
-    const output = getOutput(filepath1, filepath2, program.format);
-    console.log(output);
-  });
+  .action((filepath1, filepath2) => console.log(getOutput(filepath1, filepath2, program.format)));
 
 program.parse(process.argv);

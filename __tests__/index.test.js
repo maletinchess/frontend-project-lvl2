@@ -12,20 +12,17 @@ const __dirname = dirname(__filename);
 /* eslint no-undef: "error" */
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const expectedStylish = fs.readFileSync(getFixturePath('stylish'), 'utf-8');
-const expectedPlain = fs.readFileSync(getFixturePath('plain'), 'utf-8');
-const expectedJSON = fs.readFileSync(getFixturePath('json.json'), 'utf-8');
 
 describe.each([
-  ['ini', getFixturePath('ini1.ini'), getFixturePath('ini2.ini')],
-  ['json', getFixturePath('json1.json'), getFixturePath('json2.json')],
-  ['yaml', getFixturePath('yaml1.yml'), getFixturePath('yaml2.yml')],
-])('%s', (filetype, obj1, obj2) => {
+  ['ini'],
+  ['json'],
+  ['yaml'],
+])(' test genDiff filetype %s ', () => {
   test.each([
-    ['stylish', expectedStylish],
-    ['plain', expectedPlain],
-    ['json', expectedJSON],
-  ])('%s', (format, result) => {
-    expect(genDiff(obj1, obj2, format)).toEqual(result);
+    ['stylish', getFixturePath('ini1.ini'), getFixturePath('ini2.ini'), fs.readFileSync(getFixturePath('stylish'), 'utf-8')],
+    ['plain', getFixturePath('json1.json'), getFixturePath('json2.json'), fs.readFileSync(getFixturePath('plain'), 'utf-8')],
+    ['json', getFixturePath('yaml1.yml'), getFixturePath('yaml2.yml'), fs.readFileSync(getFixturePath('json.json'), 'utf-8')],
+  ])('format %s', (format, filepath1, filepath2, result) => {
+    expect(genDiff(filepath1, filepath2, format)).toEqual(result);
   });
 });

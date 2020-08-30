@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-const normalizeValue = (value) => {
-  if (_.isObject(value)) {
+const stringifyValue = (value) => {
+  if (_.isPlainObject(value)) {
     return '[complex value]';
   }
   if (_.isBoolean(value)) {
@@ -20,11 +20,11 @@ const formatPlain = (tree) => tree.map((node) => {
     } = node1;
     switch (type) {
       case 'add':
-        return `Property '${acc}' was added with value: ${normalizeValue(value)}`;
+        return `Property '${acc}' was added with value: ${stringifyValue(value)}`;
       case 'removed':
         return `Property '${acc}' was removed`;
       case 'updated':
-        return `Property '${acc}' was updated. From ${normalizeValue(valueBefore)} to ${normalizeValue(valueAfter)}`;
+        return `Property '${acc}' was updated. From ${stringifyValue(valueBefore)} to ${stringifyValue(valueAfter)}`;
       case 'unchanged':
         return null;
       case 'nested':

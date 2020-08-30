@@ -14,14 +14,14 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
 describe.each([
-  ['ini', 'ini1.ini', 'ini2.ini'],
-  ['json', 'json1.json', 'json2.json'],
-  ['yaml', 'yaml1.yml', 'yaml2.yml'],
-])(' test genDiff filetype %s ', (filetype, filename1, filename2) => {
+  ['ini'],
+  ['json'],
+  ['yml'],
+])(' test genDiff filetype %s ', (filetype) => {
   test.each([
-    ['stylish', getFixturePath(filename1), getFixturePath(filename2), fs.readFileSync(getFixturePath('stylish'), 'utf-8')],
-    ['plain', getFixturePath(filename1), getFixturePath(filename2), fs.readFileSync(getFixturePath('plain'), 'utf-8')],
-    ['json', getFixturePath(filename1), getFixturePath(filename2), fs.readFileSync(getFixturePath('json.json'), 'utf-8')],
+    ['stylish', getFixturePath(`${filetype}1.${filetype}`), getFixturePath(`${filetype}2.${filetype}`), fs.readFileSync(getFixturePath('stylish'), 'utf-8')],
+    ['plain', getFixturePath(`${filetype}1.${filetype}`), getFixturePath(`${filetype}2.${filetype}`), fs.readFileSync(getFixturePath('plain'), 'utf-8')],
+    ['json', getFixturePath(`${filetype}1.${filetype}`), getFixturePath(`${filetype}2.${filetype}`), fs.readFileSync(getFixturePath('json.json'), 'utf-8')],
   ])('format %s', (format, filepath1, filepath2, result) => {
     expect(genDiff(filepath1, filepath2, format)).toEqual(result);
   });

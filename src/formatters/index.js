@@ -1,15 +1,15 @@
-import makeStylish from './stylish.js';
-import makePlain from './plain.js';
-import makeJson from './json.js';
+import formatStylish from './stylish.js';
+import formatPlain from './plain.js';
+import formatJson from './json.js';
 
 const defineFormat = (format) => {
   switch (format) {
     case 'plain':
-      return makePlain;
+      return formatPlain;
     case 'json':
-      return makeJson;
+      return formatJson;
     case 'stylish':
-      return makeStylish;
+      return formatStylish;
     default:
       throw new Error(`unknown ${format}`);
   }

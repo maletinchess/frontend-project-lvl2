@@ -2,46 +2,29 @@ import YAML from 'yaml';
 import ini from 'ini';
 import _ from 'lodash';
 
-const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-const isValueStringifiedNumber = (value) => {
-  if (typeof (value) === 'boolean') {
-    return false;
+const isValueStringifiedNumber = (value) => _.isFinite(parseInt(value, 10));
+
+const normalizeIni = (tree) => Object.entries(tree).reduce((acc, [key, value]) => {
+  if (_.isObject(value)) {
+    return { ...acc, [key]: normalizeIni(value) };
   }
-  const numbersQuantity = value.split('').filter((symbol) => numbers.includes(symbol));
-  return numbersQuantity.length === value.length;
-};
+  if (isValueStringifiedNumber(value)) {
+    return { ...acc, [key]: parseInt(value, 10) };
+  }
+  return { ...acc, [key]: value };
+}, {});
 
-const restoreNumber = (str) => Number.parseInt(str, 10);
-
-export const restore = (obj) => {
-  const keys = _.keys(obj);
-  const cb = (acc, key) => {
-    if (typeof obj[key] !== 'object') {
-      if (isValueStringifiedNumber(obj[key])) {
-        acc[key] = restoreNumber(obj[key]);
-      } else {
-        acc[key] = obj[key];
-      }
-    } else {
-      acc[key] = restore(obj[key]);
-    }
-    return acc;
-  };
-  return keys.reduce(cb, {});
-};
-
-const parse = (data) => {
-  const [format, content] = data;
-  switch (format) {
+const getParser = (type) => {
+  switch (type) {
     case 'json':
-      return JSON.parse(content);
+      return JSON.parse;
     case 'yml':
-      return YAML.parse(content);
+      return YAML.parse;
     case 'ini':
-      return restore(ini.parse(content));
+      return _.flowRight([normalizeIni, ini.parse]);
     default:
-      throw new Error(`unknown ${format}`);
+      throw new Error(`unknown ${type}`);
   }
 };
 
-export default parse;
+export default getParser;

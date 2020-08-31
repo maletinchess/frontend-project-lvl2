@@ -10,7 +10,7 @@ const stringifyValue = (value) => {
   return `'${value}'`;
 };
 
-const formatPlain = (tree) => tree.map((node) => {
+const formatPlain = (tree) => _.flattenDeep(tree.map((node) => {
   const {
     name,
   } = node;
@@ -29,14 +29,12 @@ const formatPlain = (tree) => tree.map((node) => {
         return null;
       case 'nested':
         return children
-          .map((item) => iter(item, `${acc}.${item.name}`))
-          .filter((item) => item !== null)
-          .join('\n');
+          .map((item) => iter(item, `${acc}.${item.name}`));
       default:
         throw new Error(`unknown type: ${type}`);
     }
   };
   return iter(node, name);
-}).join('\n');
+})).filter((item) => item !== null).join('\n');
 
 export default formatPlain;

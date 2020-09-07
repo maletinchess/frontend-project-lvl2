@@ -1,41 +1,41 @@
 import _ from 'lodash';
 
 const genTree = (data1, data2) => {
-  const keys = _.union(_.keys(data1), _.keys(data2)).sort();
+  const keys = _.sortBy(_.union(_.keys(data1), _.keys(data2)));
   return keys.map((key) => {
     if (!_.has(data1, key)) {
       return {
-        name: `${key}`,
-        type: 'add',
+        key,
+        type: 'added',
         value: data2[key],
       };
     }
     if (!_.has(data2, key)) {
       return {
-        name: `${key}`,
+        key,
         type: 'removed',
         value: data1[key],
       };
     }
     if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
       return {
-        name: `${key}`,
+        key,
         type: 'nested',
         children: genTree(data1[key], data2[key]),
       };
     }
     if (_.isEqual(data1[key], data2[key])) {
       return {
-        name: `${key}`,
+        key,
         type: 'unchanged',
         value: data1[key],
       };
     }
     return {
-      name: `${key}`,
+      key,
       type: 'updated',
-      valueBefore: data1[key],
-      valueAfter: data2[key],
+      value1: data1[key],
+      value2: data2[key],
     };
   });
 };

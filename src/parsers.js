@@ -2,13 +2,13 @@ import YAML from 'yaml';
 import ini from 'ini';
 import _ from 'lodash';
 
-const isValueStringifiedNumber = (value) => !Number.isNaN(parseFloat(value, 10));
+const isNumeric = (value) => !Number.isNaN(parseFloat(value));
 
 const normalizeIni = (tree) => Object.entries(tree).reduce((acc, [key, value]) => {
   if (_.isObject(value)) {
     return { ...acc, [key]: normalizeIni(value) };
   }
-  if (isValueStringifiedNumber(value)) {
+  if (isNumeric(value)) {
     return { ...acc, [key]: Number(value) };
   }
   return { ...acc, [key]: value };
@@ -21,7 +21,7 @@ const getParser = (type) => {
     case 'yml':
       return YAML.parse;
     case 'ini':
-      return _.flowRight([normalizeIni, ini.parse]);
+      return _.flowRight(normalizeIni, ini.parse);
     default:
       throw new Error(`unknown ${type}`);
   }

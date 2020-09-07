@@ -1,45 +1,51 @@
 import _ from 'lodash';
 
-const indent = '  ';
+const indentGlobal = '  ';
 
-const typeSign = {
-  add: '+ ', removed: '- ', unchanged: '  ', nested: '  ',
-};
+const stringify = (key, value, type) => `${type}${key}: ${value}`;
 
-const normalizeObject = (object, indentNumber) => {
+const getIndent = (indent, depth) => indent.repeat(depth);
+
+const normalizeObject = (object, depth = 0) => {
   const iter = (item, counter) => {
     if (!_.isObject(item)) {
-      return `${item}`;
+      return item;
     }
     const modified = Object.entries(item).map(([key, value]) => {
       if (!_.isObject(value)) {
-        return `${indent.repeat(counter)}  ${key}: ${value}`;
+        return `${getIndent(indentGlobal, counter)}${stringify(key, value, '  ')}`;
       }
-      return `${indent.repeat(counter)}  ${key}: ${iter(value, counter + 2)}`;
+      return `${getIndent(indentGlobal, counter)}${stringify(key, iter(value, counter + 2), '  ')}`;
     });
-    return `{\n${indent}${modified.join(`\n${indent}`)}\n${indent.repeat(counter)}}`;
+    return `{\n${indentGlobal}${modified.join(`\n${indentGlobal}`)}\n${getIndent(indentGlobal, counter)}}`;
   };
-  return iter(object, indentNumber);
+  return iter(object, depth);
 };
 
-const formatStylish = (tree, start = 0) => {
-  const callback = (node) => {
+const formatStylish = (tree, depth = 0) => {
+  const treeMod = tree.map((node) => {
     const {
-      name, type, value, children, valueBefore, valueAfter,
+      key, type, value, children, value1, value2,
     } = node;
-    if (type === 'nested') {
-      return `${typeSign[type]}${name}: ${formatStylish(children, start + 2)}`;
+    switch (type) {
+      case 'nested':
+        return `${stringify(key, formatStylish(children, depth + 2), '  ')}`;
+      case 'updated':
+        return [
+          stringify(key, normalizeObject(value1, depth + 2), '- '),
+          stringify(key, normalizeObject(value2, depth + 2), '+ '),
+        ].join(`\n${getIndent(indentGlobal, depth + 1)}`);
+      case 'added':
+        return stringify(key, normalizeObject(value, depth + 2), '+ ');
+      case 'removed':
+        return stringify(key, normalizeObject(value, depth + 2), '- ');
+      case 'unchanged':
+        return stringify(key, normalizeObject(value, depth + 2), '  ');
+      default:
+        throw new Error(`unknown type ${type}`);
     }
-    if (type === 'updated') {
-      return [
-        `- ${name}: ${normalizeObject(valueBefore, start + 2)}`,
-        `+ ${name}: ${normalizeObject(valueAfter, start + 2)}`,
-      ].join(`\n${indent.repeat(start + 1)}`);
-    }
-    return `${typeSign[type]}${name}: ${normalizeObject(value, start + 2)}`;
-  };
-  const treeMod = tree.map((node) => callback(node));
-  return `{\n${indent.repeat(start + 1)}${treeMod.join(`\n${indent.repeat(start + 1)}`)}\n${indent.repeat(start)}}`;
+  });
+  return `{\n${getIndent(indentGlobal, depth + 1)}${treeMod.join(`\n${getIndent(indentGlobal, depth + 1)}`)}\n${getIndent(indentGlobal, depth)}}`;
 };
 
 export default formatStylish;

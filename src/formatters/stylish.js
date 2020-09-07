@@ -27,7 +27,7 @@ const formatStylish = (tree, depth = 0) => {
     } = node;
     switch (type) {
       case 'nested':
-        return `${stringify(key, formatStylish(children, depth + 2), '  ')}`;
+        return stringify(key, formatStylish(children, depth + 2), '  ');
       case 'updated':
         return [
           stringify(key, normalizeObject(value1, depth + 2), '- '),

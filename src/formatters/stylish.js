@@ -1,10 +1,8 @@
 import _ from 'lodash';
 
-const indentGlobal = '  ';
-
 const stringify = (key, value, type) => `${type}${key}: ${value}`;
 
-const getIndent = (indent, depth) => indent.repeat(depth);
+const getIndent = (depth) => '  '.repeat(depth);
 
 const normalizeObject = (object, depth = 0) => {
   const iter = (item, counter) => {
@@ -13,11 +11,11 @@ const normalizeObject = (object, depth = 0) => {
     }
     const modified = Object.entries(item).map(([key, value]) => {
       if (!_.isObject(value)) {
-        return `${getIndent(indentGlobal, counter)}${stringify(key, value, '  ')}`;
+        return `${getIndent(counter)}${stringify(key, value, '  ')}`;
       }
-      return `${getIndent(indentGlobal, counter)}${stringify(key, iter(value, counter + 2), '  ')}`;
+      return `${getIndent(counter)}${stringify(key, iter(value, counter + 2), '  ')}`;
     });
-    return `{\n${indentGlobal}${modified.join(`\n${indentGlobal}`)}\n${getIndent(indentGlobal, counter)}}`;
+    return `{\n${'  '}${modified.join(`\n${'  '}`)}\n${getIndent(counter)}}`;
   };
   return iter(object, depth);
 };
@@ -34,7 +32,7 @@ const formatStylish = (tree, depth = 0) => {
         return [
           stringify(key, normalizeObject(value1, depth + 2), '- '),
           stringify(key, normalizeObject(value2, depth + 2), '+ '),
-        ].join(`\n${getIndent(indentGlobal, depth + 1)}`);
+        ].join(`\n${getIndent(depth + 1)}`);
       case 'added':
         return stringify(key, normalizeObject(value, depth + 2), '+ ');
       case 'removed':
@@ -45,7 +43,7 @@ const formatStylish = (tree, depth = 0) => {
         throw new Error(`unknown type ${type}`);
     }
   });
-  return `{\n${getIndent(indentGlobal, depth + 1)}${treeMod.join(`\n${getIndent(indentGlobal, depth + 1)}`)}\n${getIndent(indentGlobal, depth)}}`;
+  return `{\n${getIndent(depth + 1)}${treeMod.join(`\n${getIndent(depth + 1)}`)}\n${getIndent(depth)}}`;
 };
 
 export default formatStylish;

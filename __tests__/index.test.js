@@ -12,6 +12,8 @@ const __dirname = dirname(__filename);
 /* eslint no-undef: "error" */
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+let expected;
+let diff;
 
 describe.each([
   ['ini'],
@@ -23,6 +25,8 @@ describe.each([
     ['plain', getFixturePath(`${filetype}1.${filetype}`), getFixturePath(`${filetype}2.${filetype}`)],
     ['json', getFixturePath(`${filetype}1.${filetype}`), getFixturePath(`${filetype}2.${filetype}`)],
   ])('format %s', (format, filepath1, filepath2) => {
-    expect(genDiff(filepath1, filepath2, format)).toEqual(fs.readFileSync(getFixturePath(format), 'utf-8'));
+    expected = fs.readFileSync(getFixturePath(format)).toString();
+    diff = genDiff(filepath1, filepath2, format);
+    expect(diff).toEqual(expected);
   });
 });

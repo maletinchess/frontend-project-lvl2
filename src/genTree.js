@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 const genTree = (data1, data2) => {
-  const keys = _.sortBy(_.union(_.keys(data1), _.keys(data2)));
+  const keys = (_.union(_.keys(data1), _.keys(data2))).sort();
   return keys.map((key) => {
     if (!_.has(data1, key)) {
       return {

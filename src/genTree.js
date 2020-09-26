@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 const genTree = (data1, data2) => {
   const keys = _.sortBy(_.union(_.keys(data1), _.keys(data2)));
+
   const diff = keys.map((key) => {
     if (!_.has(data1, key)) {
       return {
@@ -10,6 +11,7 @@ const genTree = (data1, data2) => {
         value: data2[key],
       };
     }
+
     if (!_.has(data2, key)) {
       return {
         key,
@@ -17,6 +19,7 @@ const genTree = (data1, data2) => {
         value: data1[key],
       };
     }
+
     if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
       return {
         key,
@@ -24,6 +27,7 @@ const genTree = (data1, data2) => {
         children: genTree(data1[key], data2[key]),
       };
     }
+
     if (data1[key] !== data2[key]) {
       return {
         key,
@@ -32,12 +36,14 @@ const genTree = (data1, data2) => {
         value2: data2[key],
       };
     }
+
     return {
       key,
       type: 'unchanged',
       value: data1[key],
     };
   });
+
   return diff;
 };
 

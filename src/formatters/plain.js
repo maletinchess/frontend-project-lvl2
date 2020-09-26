@@ -10,30 +10,40 @@ const stringify = (value) => {
   return `'${value}'`;
 };
 
-const formatPlain = (tree) => {
+const renderPlain = (tree) => {
   const iter = (subTree, path) => {
-    const modifiedSubTree = subTree.flatMap((node) => {
+    const output = subTree.flatMap((node) => {
       const {
         key, type, value, value1, value2, children,
       } = node;
+
+      const keyPath = [...path, key];
+
       switch (type) {
         case 'added':
-          return `Property '${[...path, key].join('.')}' was added with value: ${stringify(value)}`;
+          return `Property '${keyPath.join('.')}' was added with value: ${stringify(value)}`;
+
         case 'removed':
-          return `Property '${[...path, key].join('.')}' was removed`;
+          return `Property '${keyPath.join('.')}' was removed`;
+
         case 'updated':
-          return `Property '${[...path, key].join('.')}' was updated. From ${stringify(value1)} to ${stringify(value2)}`;
+          return `Property '${keyPath.join('.')}' was updated. From ${stringify(value1)} to ${stringify(value2)}`;
+
         case 'unchanged':
           return null;
+
         case 'nested':
-          return iter(children, [...path, key]);
+          return iter(children, keyPath);
+
         default:
           throw new Error(`unknown type: ${type}`);
       }
     });
-    return modifiedSubTree.filter((item) => item !== null).join('\n');
+
+    return output.filter((item) => item !== null).join('\n');
   };
+
   return iter(tree, []);
 };
 
-export default formatPlain;
+export default renderPlain;

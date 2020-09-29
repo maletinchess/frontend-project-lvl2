@@ -17,20 +17,16 @@ const renderStylish = (ast) => {
       switch (node.type) {
         case 'updated': {
           const { key, value1, value2 } = node;
-
           const data1 = `${indent(depth)}  - ${key}: ${stringify(value1, depth)}`;
           const data2 = `${indent(depth)}  + ${key}: ${stringify(value2, depth)}`;
-
           return [data1, data2];
         }
-
         case 'added':
           return `${indent(depth)}  + ${node.key}: ${stringify(node.value, depth)}`;
         case 'removed':
           return `${indent(depth)}  - ${node.key}: ${stringify(node.value, depth)}`;
         case 'unchanged':
           return `${indent(depth)}    ${node.key}: ${stringify(node.value, depth)}`;
-
         case 'nested':
           return `${indent(depth)}    ${node.key}: ${iter(node.children, depth + 2)}`;
         default:

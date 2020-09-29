@@ -22,28 +22,23 @@ const renderPlain = (tree) => {
       switch (type) {
         case 'added':
           return `Property '${keyPath.join('.')}' was added with value: ${stringify(value)}`;
-
         case 'removed':
           return `Property '${keyPath.join('.')}' was removed`;
-
         case 'updated':
           return `Property '${keyPath.join('.')}' was updated. From ${stringify(value1)} to ${stringify(value2)}`;
-
         case 'unchanged':
-          return null;
-
+          return [];
         case 'nested':
           return iter(children, keyPath);
-
         default:
           throw new Error(`unknown type: ${type}`);
       }
     });
 
-    return output.filter((item) => item !== null).join('\n');
+    return output;
   };
 
-  return iter(tree, []);
+  return iter(tree, []).join('\n');
 };
 
 export default renderPlain;
